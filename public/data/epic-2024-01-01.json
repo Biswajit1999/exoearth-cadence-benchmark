@@ -1,0 +1,220 @@
+{
+  "dataset": "DSCOVR EPIC natural-colour imagery",
+  "date": "2024-01-01",
+  "records": 13,
+  "generatedAt": "2026-08-23T23:22:00.005750+00:00",
+  "apiUrl": "https://epic.gsfc.nasa.gov/api/natural/date/2024-01-01",
+  "level1bArchive": "https://asdc.larc.nasa.gov/project/DSCOVR/DSCOVR_EPIC_L1B_3",
+  "credit": "NASA EPIC Team",
+  "scientificWarning": "RGB values are derived from display-adjusted natural imagery, not calibrated Level-1B radiance.",
+  "observations": [
+    {
+      "identifier": "20240101005515",
+      "date": "2024-01-01 00:50:27",
+      "image": "epic_1b_20240101005515",
+      "centroidLatitude": -29.055176,
+      "centroidLongitude": 158.503418,
+      "diskRgbPreview": [
+        0.4010976,
+        0.4240353,
+        0.4542591
+      ],
+      "diskPixelFraction": 0.5390561,
+      "thumbnail": "data/epic-2024-01-01/20240101005515.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101005515.jpg",
+      "sourceSha256": "bc67b22250fa462ce7a3b8180a01a15fd982c8f9901f29fcd0611cec292539be"
+    },
+    {
+      "identifier": "20240101024318",
+      "date": "2024-01-01 02:38:29",
+      "image": "epic_1b_20240101024318",
+      "centroidLatitude": -29.069824,
+      "centroidLongitude": 131.572266,
+      "diskRgbPreview": [
+        0.4055297,
+        0.4259839,
+        0.4528572
+      ],
+      "diskPixelFraction": 0.5377906,
+      "thumbnail": "data/epic-2024-01-01/20240101024318.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101024318.jpg",
+      "sourceSha256": "b74e466c0a1a67412a534e4fc00b7e8b78d4be7abe0fd749c84b4e851c270342"
+    },
+    {
+      "identifier": "20240101043120",
+      "date": "2024-01-01 04:26:31",
+      "image": "epic_1b_20240101043120",
+      "centroidLatitude": -29.11377,
+      "centroidLongitude": 104.589844,
+      "diskRgbPreview": [
+        0.4133919,
+        0.4325614,
+        0.4575735
+      ],
+      "diskPixelFraction": 0.5378078,
+      "thumbnail": "data/epic-2024-01-01/20240101043120.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101043120.jpg",
+      "sourceSha256": "b7536fbde2978afd9ebf18d55218eb190c03054d9134cd2cbf1471bec10e03e4"
+    },
+    {
+      "identifier": "20240101061923",
+      "date": "2024-01-01 06:14:34",
+      "image": "epic_1b_20240101061923",
+      "centroidLatitude": -29.069824,
+      "centroidLongitude": 77.607422,
+      "diskRgbPreview": [
+        0.4138474,
+        0.4314551,
+        0.4547136
+      ],
+      "diskPixelFraction": 0.5381387,
+      "thumbnail": "data/epic-2024-01-01/20240101061923.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101061923.jpg",
+      "sourceSha256": "9958cb106375f42f7ab8d348fad309d13f48f4a17ec022e0d552aaddc58b63d5"
+    },
+    {
+      "identifier": "20240101080725",
+      "date": "2024-01-01 08:02:36",
+      "image": "epic_1b_20240101080725",
+      "centroidLatitude": -29.124756,
+      "centroidLongitude": 50.646973,
+      "diskRgbPreview": [
+        0.4113846,
+        0.4280045,
+        0.4496552
+      ],
+      "diskPixelFraction": 0.5379638,
+      "thumbnail": "data/epic-2024-01-01/20240101080725.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101080725.jpg",
+      "sourceSha256": "ed63bb8c6373998a4b0c3f3239d930be7c38ff188a786df8e460db17826783c4"
+    },
+    {
+      "identifier": "20240101095527",
+      "date": "2024-01-01 09:50:38",
+      "image": "epic_1b_20240101095527",
+      "centroidLatitude": -29.135742,
+      "centroidLongitude": 23.664551,
+      "diskRgbPreview": [
+        0.4051995,
+        0.4207323,
+        0.4410508
+      ],
+      "diskPixelFraction": 0.5380024,
+      "thumbnail": "data/epic-2024-01-01/20240101095527.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101095527.jpg",
+      "sourceSha256": "f18881bff87833e213f908ed3e1177336b5f94181269f1bb33aadbe06acbd9f3"
+    },
+    {
+      "identifier": "20240101114329",
+      "date": "2024-01-01 11:38:41",
+      "image": "epic_1b_20240101114329",
+      "centroidLatitude": -29.143066,
+      "centroidLongitude": -3.288574,
+      "diskRgbPreview": [
+        0.4111482,
+        0.4268217,
+        0.4475747
+      ],
+      "diskPixelFraction": 0.5384251,
+      "thumbnail": "data/epic-2024-01-01/20240101114329.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101114329.jpg",
+      "sourceSha256": "8b6d698b2c81440698a054685d8bcea9ca404104e58829aca578ea038d1fe946"
+    },
+    {
+      "identifier": "20240101133132",
+      "date": "2024-01-01 13:26:43",
+      "image": "epic_1b_20240101133132",
+      "centroidLatitude": -29.11377,
+      "centroidLongitude": -30.27832,
+      "diskRgbPreview": [
+        0.4053285,
+        0.4233795,
+        0.4464068
+      ],
+      "diskPixelFraction": 0.5386566,
+      "thumbnail": "data/epic-2024-01-01/20240101133132.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101133132.jpg",
+      "sourceSha256": "2f3ccc90716ba74ed8ffe05de885f4e3a3afa7e784e816152f37a1eb34f88be2"
+    },
+    {
+      "identifier": "20240101151935",
+      "date": "2024-01-01 15:14:46",
+      "image": "epic_1b_20240101151935",
+      "centroidLatitude": -29.128418,
+      "centroidLongitude": -57.297363,
+      "diskRgbPreview": [
+        0.4062407,
+        0.4286978,
+        0.4553366
+      ],
+      "diskPixelFraction": 0.538173,
+      "thumbnail": "data/epic-2024-01-01/20240101151935.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101151935.jpg",
+      "sourceSha256": "a15bf4401c2116c235afa9f9496924ecb055516281218be5192621ecaba55579"
+    },
+    {
+      "identifier": "20240101170737",
+      "date": "2024-01-01 17:02:48",
+      "image": "epic_1b_20240101170737",
+      "centroidLatitude": -29.157715,
+      "centroidLongitude": -84.199219,
+      "diskRgbPreview": [
+        0.4101523,
+        0.4337802,
+        0.460815
+      ],
+      "diskPixelFraction": 0.5387097,
+      "thumbnail": "data/epic-2024-01-01/20240101170737.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101170737.jpg",
+      "sourceSha256": "971b10b0a421d67247cd18f4fac3937fe84e7137507c56c8ce864df898b9886a"
+    },
+    {
+      "identifier": "20240101185539",
+      "date": "2024-01-01 18:50:50",
+      "image": "epic_1b_20240101185539",
+      "centroidLatitude": -29.157715,
+      "centroidLongitude": -111.225586,
+      "diskRgbPreview": [
+        0.4067626,
+        0.429903,
+        0.4581407
+      ],
+      "diskPixelFraction": 0.5385485,
+      "thumbnail": "data/epic-2024-01-01/20240101185539.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101185539.jpg",
+      "sourceSha256": "eaf8d795ab5ac7d17d062edcd6712a6be3c271fced31d72d27a6e9c691619b90"
+    },
+    {
+      "identifier": "20240101204341",
+      "date": "2024-01-01 20:38:53",
+      "image": "epic_1b_20240101204341",
+      "centroidLatitude": -29.157715,
+      "centroidLongitude": -138.164062,
+      "diskRgbPreview": [
+        0.3921721,
+        0.4180862,
+        0.4517587
+      ],
+      "diskPixelFraction": 0.5386043,
+      "thumbnail": "data/epic-2024-01-01/20240101204341.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101204341.jpg",
+      "sourceSha256": "54f1dd1a0676a1c5568e9ce88c0e9b26fcf4b3abcc626ab39a9e1a76ebe0d717"
+    },
+    {
+      "identifier": "20240101223144",
+      "date": "2024-01-01 22:26:55",
+      "image": "epic_1b_20240101223144",
+      "centroidLatitude": -29.223633,
+      "centroidLongitude": -165.168457,
+      "diskRgbPreview": [
+        0.3929098,
+        0.4186553,
+        0.4523792
+      ],
+      "diskPixelFraction": 0.5387894,
+      "thumbnail": "data/epic-2024-01-01/20240101223144.webp",
+      "sourceUrl": "https://epic.gsfc.nasa.gov/archive/natural/2024/01/01/jpg/epic_1b_20240101223144.jpg",
+      "sourceSha256": "5a1ecc620b6b6d702f897032eea177f6b8633804a3b81849f52f678562a32a2a"
+    }
+  ]
+}

@@ -1,134 +1,109 @@
-import { useMemo, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import { DEFAULT_SCENARIO, PRESETS, simulate, toCsv, type Scenario } from "./science";
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { PRESETS, simulate } from "./science";
 
-const WIDTH = 760;
-const HEIGHT = 250;
+type EpicObservation = {
+  identifier: string; date: string; centroidLatitude: number; centroidLongitude: number;
+  diskRgbPreview: [number, number, number]; diskPixelFraction: number; thumbnail: string;
+  sourceUrl: string; sourceSha256: string;
+};
+type EpicManifest = {
+  dataset: string; date: string; records: number; generatedAt: string; apiUrl: string;
+  level1bArchive: string; credit: string; scientificWarning: string; observations: EpicObservation[];
+};
+const WIDTH = 900;
+const HEIGHT = 260;
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+const utcHours = (date: string) => Date.parse(`${date.replace(" ", "T")}Z`) / 3_600_000;
 
-function pathFor(values: number[], minimum: number, maximum: number): string {
-  const span = Math.max(maximum - minimum, 1e-9);
+function unwrap(longitudes: number[]): number[] {
+  const output = [longitudes[0]];
+  for (let index = 1; index < longitudes.length; index += 1) {
+    let value = longitudes[index];
+    while (value - output[index - 1] > 180) value -= 360;
+    while (value - output[index - 1] < -180) value += 360;
+    output.push(value);
+  }
+  return output;
+}
+
+function regressionPeriod(records: EpicObservation[]): number {
+  const x = records.map((record) => utcHours(record.date) - utcHours(records[0].date));
+  const y = unwrap(records.map((record) => record.centroidLongitude));
+  const xMean = x.reduce((a, b) => a + b, 0) / x.length;
+  const yMean = y.reduce((a, b) => a + b, 0) / y.length;
+  const slope = x.reduce((sum, value, index) => sum + (value - xMean) * (y[index] - yMean), 0) /
+    x.reduce((sum, value) => sum + (value - xMean) ** 2, 0);
+  return 360 / Math.abs(slope);
+}
+
+function medianCadence(records: EpicObservation[]): number {
+  const gaps = records.slice(1).map((record, index) => utcHours(record.date) - utcHours(records[index].date)).sort((a, b) => a - b);
+  return gaps[Math.floor(gaps.length / 2)];
+}
+
+function chartPath(values: number[], minimum: number, maximum: number): string {
   return values.map((value, index) => {
-    const x = 42 + index * (WIDTH - 64) / Math.max(values.length - 1, 1);
-    const y = 18 + (maximum - value) * (HEIGHT - 48) / span;
-    return `${index ? "L" : "M"}${x.toFixed(2)},${y.toFixed(2)}`;
+    const x = 58 + index * (WIDTH - 92) / Math.max(1, values.length - 1);
+    const y = 24 + (maximum - value) * (HEIGHT - 70) / Math.max(1e-8, maximum - minimum);
+    return `${index ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`;
   }).join(" ");
 }
 
-function LightCurveChart({ result }: { result: ReturnType<typeof simulate> }) {
-  const all = result.observations.flatMap((point) => [point.blue, point.red, point.nir]);
-  const minimum = Math.min(...all, 0);
-  const maximum = Math.max(...all, 1e-5);
+function ObservationChart({ records }: { records: EpicObservation[] }) {
   const series = [
-    { label: "Blue 450 nm", key: "blue" as const, className: "line-blue" },
-    { label: "Red 650 nm", key: "red" as const, className: "line-red" },
-    { label: "NIR 850 nm", key: "nir" as const, className: "line-nir" },
+    { label: "R preview", index: 0, className: "red" },
+    { label: "G preview", index: 1, className: "green" },
+    { label: "B preview", index: 2, className: "blue" },
   ];
-  return <figure className="chart-card">
-    <figcaption><span>Disk-integrated light curve</span><small>relative reflected flux · retained epochs</small></figcaption>
-    <div className="legend">{series.map((item) => <span key={item.key}><i className={item.className} />{item.label}</span>)}</div>
-    <svg className="chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`Three-band light curve containing ${result.observations.length} epochs.`}>
-      <title>Three-band simulated reflected-light time series</title>
-      {[0, 1, 2, 3, 4].map((line) => <line key={line} x1="42" x2={WIDTH - 22} y1={18 + line * 50} y2={18 + line * 50} className="grid-line" />)}
-      {series.map((item) => <path key={item.key} d={pathFor(result.observations.map((point) => point[item.key]), minimum, maximum)} className={`series ${item.className}`} />)}
+  const values = records.flatMap((record) => record.diskRgbPreview);
+  const minimum = Math.min(...values) * 0.98;
+  const maximum = Math.max(...values) * 1.02;
+  return <figure className="observation-chart">
+    <figcaption><div><span className="figure-index">FIGURE 01</span><h2>Whole-disk colour variability</h2></div><p>Display-derived diagnostic · not Level-1B radiance</p></figcaption>
+    <div className="chart-legend">{series.map((item) => <span key={item.label}><i className={item.className} />{item.label}</span>)}</div>
+    <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label="Disk-integrated red, green and blue preview values across thirteen DSCOVR EPIC observations.">
+      <title>DSCOVR EPIC whole-disk preview colour time series</title>
+      {[0, 1, 2, 3].map((row) => <line key={row} x1="58" x2={WIDTH - 34} y1={30 + row * 58} y2={30 + row * 58} className="gridline" />)}
+      {series.map((item) => <path key={item.label} className={`data-line ${item.className}`} d={chartPath(records.map((record) => record.diskRgbPreview[item.index]), minimum, maximum)} />)}
+      {records.map((record, index) => <text key={record.identifier} x={58 + index * (WIDTH - 92) / (records.length - 1)} y={HEIGHT - 14}>{record.date.slice(11, 16)}</text>)}
     </svg>
-    <details><summary>Accessible data summary</summary><p>The simulation retained {result.observations.length} epochs. The strongest color-period peak is {result.recoveredPeriodHours.toFixed(2)} hours, compared with the injected {result.observations.length ? "rotation" : "unknown input"}.</p></details>
+    <details><summary>View accessible observation table</summary><table><thead><tr><th>UTC</th><th>Red</th><th>Green</th><th>Blue</th><th>Centroid longitude</th></tr></thead><tbody>{records.map((record) => <tr key={record.identifier}><td>{record.date}</td>{record.diskRgbPreview.map((value, index) => <td key={index}>{value.toFixed(5)}</td>)}<td>{record.centroidLongitude.toFixed(2)}°</td></tr>)}</tbody></table></details>
   </figure>;
-}
-
-function PeriodChart({ result, injected }: { result: ReturnType<typeof simulate>; injected: number }) {
-  const maximum = Math.max(...result.periodogram.map((point) => point.power), 1e-5);
-  const injectedX = 42 + (injected - 6) * (WIDTH - 64) / 42;
-  return <figure className="chart-card">
-    <figcaption><span>Injection–recovery periodogram</span><small>sinusoidal least-squares power · 6–48 h</small></figcaption>
-    <div className="legend"><span><i className="line-power" />Color modulation</span><span><i className="line-truth" />Injected truth</span></div>
-    <svg className="chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`Periodogram peaks at ${result.recoveredPeriodHours.toFixed(2)} hours; injected period is ${injected.toFixed(2)} hours.`}>
-      <title>Period recovery compared with injected rotation</title>
-      {[0, 1, 2, 3, 4].map((line) => <line key={line} x1="42" x2={WIDTH - 22} y1={18 + line * 50} y2={18 + line * 50} className="grid-line" />)}
-      <path d={pathFor(result.periodogram.map((point) => point.power), 0, maximum)} className="series line-power" />
-      <line x1={injectedX} x2={injectedX} y1="18" y2={HEIGHT - 30} className="truth-marker" />
-      <text x="42" y={HEIGHT - 8}>6 h</text><text x={WIDTH - 48} y={HEIGHT - 8}>48 h</text>
-    </svg>
-  </figure>;
-}
-
-type RangeProps = { label: string; value: number; minimum: number; maximum: number; step: number; unit?: string; onChange: (value: number) => void };
-function Range({ label, value, minimum, maximum, step, unit = "", onChange }: RangeProps) {
-  const id = label.toLowerCase().replaceAll(" ", "-");
-  return <label className="control" htmlFor={id}>
-    <span>{label}<output>{value}{unit}</output></span>
-    <input id={id} type="range" min={minimum} max={maximum} step={step} value={value} onChange={(event) => onChange(Number(event.target.value))} />
-  </label>;
-}
-
-function download(name: string, text: string, type: string) {
-  const anchor = document.createElement("a");
-  anchor.href = URL.createObjectURL(new Blob([text], { type }));
-  anchor.download = name;
-  anchor.click();
-  URL.revokeObjectURL(anchor.href);
 }
 
 export function App() {
-  const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
+  const [manifest, setManifest] = useState<EpicManifest | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [error, setError] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();
-  const result = useMemo(() => simulate(scenario), [scenario]);
-  const set = <K extends keyof Scenario>(key: K, value: Scenario[K]) => setScenario((current) => ({ ...current, [key]: value }));
-  const verdictClass = result.verdict.replace(" ", "-");
+  useEffect(() => {
+    fetch(asset("data/epic-2024-01-01.json"))
+      .then((response) => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
+      .then(setManifest).catch((reason: Error) => setError(reason.message));
+  }, []);
+  const active = manifest?.observations[activeIndex];
+  const metrics = useMemo(() => manifest ? {
+    cadence: medianCadence(manifest.observations), period: regressionPeriod(manifest.observations),
+    longitude: Math.abs(unwrap(manifest.observations.map((record) => record.centroidLongitude)).at(-1)! - manifest.observations[0].centroidLongitude),
+  } : null, [manifest]);
+  const counterfactuals = useMemo(() => Object.entries(PRESETS).map(([name, scenario]) => ({ name, scenario, result: simulate(scenario) })), []);
+
   return <>
-    <header className="topbar"><a href="#main" className="wordmark"><span>EXOEARTH</span> / CADENCE BENCHMARK</a><nav aria-label="Page sections"><a href="#experiment">Experiment</a><a href="#method">Method</a><a href="https://github.com/Biswajit1999/exoearth-cadence-benchmark">GitHub</a></nav></header>
-    <main id="main">
-      <section className="hero">
-        <motion.div initial={reducedMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.42 }}>
-          <p className="eyebrow">HWO PRECURSOR · INJECTION / RECOVERY · NULL TEST</p>
-          <h1>When does a pale blue dot tell the truth?</h1>
-          <p className="lede">Stress-test claims about rotation, surface color, and ocean glint before sparse observations turn weather into a world map.</p>
-          <div className="hero-actions"><a className="button primary" href="#experiment">Run the benchmark</a><a className="button secondary" href="#method">Read assumptions</a></div>
-        </motion.div>
-        <aside className="claim-card"><span>Live verdict</span><strong className={verdictClass}>{result.verdict}</strong><p>{result.reasons[0] ?? "The injected rotation survives the declared cadence, noise, and cloud process."}</p></aside>
-      </section>
-
-      <section id="experiment" className="workspace" aria-labelledby="experiment-title">
-        <div className="section-heading"><div><p className="eyebrow">01 / DECLARE THE OBSERVATION</p><h2 id="experiment-title">Cadence laboratory</h2></div><button className="text-button" onClick={() => setScenario(DEFAULT_SCENARIO)}>Reset Earth</button></div>
-        <div className="preset-row" aria-label="Benchmark presets">{Object.entries(PRESETS).map(([name, preset]) => <button key={name} onClick={() => setScenario(preset)}>{name}</button>)}</div>
-        <div className="lab-grid">
-          <aside className="controls-panel">
-            <h3>Observation design</h3>
-            <Range label="Baseline" value={scenario.baselineDays} minimum={1} maximum={30} step={0.5} unit=" d" onChange={(value) => set("baselineDays", value)} />
-            <Range label="Cadence" value={scenario.cadenceHours} minimum={0.5} maximum={8} step={0.5} unit=" h" onChange={(value) => set("cadenceHours", value)} />
-            <Range label="Duty cycle" value={Math.round(scenario.dutyCycle * 100)} minimum={20} maximum={100} step={1} unit="%" onChange={(value) => set("dutyCycle", value / 100)} />
-            <Range label="S/N per epoch" value={scenario.snr} minimum={3} maximum={60} step={1} onChange={(value) => set("snr", value)} />
-            <Range label="Phase angle" value={scenario.phaseDegrees} minimum={20} maximum={150} step={1} unit="°" onChange={(value) => set("phaseDegrees", value)} />
-            <h3>Planet nuisance model</h3>
-            <Range label="Cloud fraction" value={Math.round(scenario.cloudFraction * 100)} minimum={5} maximum={90} step={1} unit="%" onChange={(value) => set("cloudFraction", value / 100)} />
-            <Range label="Cloud coherence" value={scenario.cloudCoherenceHours} minimum={2} maximum={72} step={1} unit=" h" onChange={(value) => set("cloudCoherenceHours", value)} />
-            <Range label="Ocean fraction" value={Math.round(scenario.oceanFraction * 100)} minimum={10} maximum={95} step={1} unit="%" onChange={(value) => set("oceanFraction", value / 100)} />
-            <Range label="Glint strength" value={scenario.glintStrength} minimum={0} maximum={0.7} step={0.01} onChange={(value) => set("glintStrength", value)} />
-            <Range label="Random seed" value={scenario.seed} minimum={1} maximum={100} step={1} onChange={(value) => set("seed", value)} />
-          </aside>
-          <div className="results-panel">
-            <div className="metric-grid">
-              <article><span>Recovered rotation</span><strong>{result.recoveredPeriodHours.toFixed(2)} h</strong><small>truth {scenario.rotationHours.toFixed(2)} h</small></article>
-              <article><span>Fractional error</span><strong>{(result.periodErrorFraction * 100).toFixed(1)}%</strong><small>pass threshold &lt; 10%</small></article>
-              <article><span>Alias separation</span><strong>{result.aliasRatio.toFixed(2)}×</strong><small>best / competing peak</small></article>
-              <article><span>Epochs / rotations</span><strong>{result.observations.length} / {result.rotationsCovered.toFixed(1)}</strong><small>retained / covered</small></article>
-            </div>
-            <LightCurveChart result={result} />
-            <PeriodChart result={result} injected={scenario.rotationHours} />
-            <div className="export-row"><button className="button primary" onClick={() => download("exoearth-observations.csv", toCsv(result), "text/csv")}>Export observations CSV</button><button className="button secondary" onClick={() => download("exoearth-run.json", JSON.stringify({ scenario, result }, null, 2), "application/json")}>Export reproducibility JSON</button></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="method" className="method-section">
-        <div><p className="eyebrow">02 / DO NOT OVER-INTERPRET</p><h2>A benchmark, not a planet retrieval.</h2><p>This reduced-order model combines a Lambert phase function, a longitudinal surface mixture, correlated cloud evolution, crescent-enhanced glint, irregular retention, Gaussian measurement noise, and a declared period scan. It asks whether the known injected truth can be recovered.</p></div>
-        <div className="method-grid">
-          <article><span>Claim tested</span><h3>Rotation is identifiable</h3><p>Pass only when the leading color-period peak is within 10% of truth and sufficiently separated from an independent alias.</p></article>
-          <article><span>Null mechanism</span><h3>Clouds imitate geography</h3><p>Cloud coherence near one rotation and short baselines deliberately create plausible but incorrect peaks.</p></article>
-          <article><span>Falsification</span><h3>Vary seed and schedule</h3><p>A robust observing design should pass across nuisance realizations—not just the attractive default seed shown here.</p></article>
-        </div>
-        <p className="scope-note"><strong>Scientific scope:</strong> this is a transparent planning benchmark. It is not a radiative-transfer model, exposure-time calculator, or evidence that any observed exoplanet has oceans, continents, vegetation, or life.</p>
-      </section>
+    <header className="mission-header"><a className="mission-mark" href="#archive"><span>BLUE MARBLE</span><b>NULL TEST</b></a><nav aria-label="Primary"><a href="#archive">Archive sequence</a><a href="#analysis">Analysis</a><a href="#provenance">Provenance</a><a href="https://github.com/Biswajit1999/exoearth-cadence-benchmark">Source</a></nav></header>
+    <main>
+      <section className="editorial-hero"><p className="issue">OBSERVATION NOTE 001 · 2024-01-01 · SUN–EARTH L1</p><h1>Earth,<br />reduced to a point.</h1><div className="hero-deck"><p>Thirteen real DSCOVR/EPIC frames. One terrestrial rotation. A provenance-first test of what survives when a living planet becomes an unresolved light curve.</p><a href="#archive">Enter the archive ↓</a></div></section>
+      {error && <section className="load-error" role="alert"><h2>Archive bundle unavailable</h2><p>{error}. Run the documented NASA data builder to regenerate it.</p></section>}
+      {!manifest && !error && <section className="loading" aria-live="polite">Reading checksummed NASA observation manifest…</section>}
+      {manifest && active && metrics && <>
+        <section id="archive" className="archive-stage"><div className="earth-stage"><AnimatePresence mode="wait"><motion.img key={active.identifier} src={asset(active.thumbnail)} alt={`NASA DSCOVR EPIC full-disk Earth at ${active.date} UTC`} initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} /></AnimatePresence><div className="image-stamp"><span>NASA / DSCOVR / EPIC</span><span>{active.date} UTC</span></div></div><aside className="frame-record"><span className="frame-number">FRAME {String(activeIndex + 1).padStart(2, "0")} / {manifest.records}</span><h2>{active.date.slice(11, 16)}<small>UTC</small></h2><dl><div><dt>Sub-observer latitude</dt><dd>{active.centroidLatitude.toFixed(3)}°</dd></div><div><dt>Sub-observer longitude</dt><dd>{active.centroidLongitude.toFixed(3)}°</dd></div><div><dt>Disk pixel fraction</dt><dd>{(active.diskPixelFraction * 100).toFixed(2)}%</dd></div><div><dt>Source integrity</dt><dd><code>{active.sourceSha256.slice(0, 12)}</code></dd></div></dl><a href={active.sourceUrl}>Open original NASA JPEG ↗</a></aside></section>
+        <section className="filmstrip" aria-label="Observation frames">{manifest.observations.map((record, index) => <button key={record.identifier} className={index === activeIndex ? "active" : ""} onClick={() => setActiveIndex(index)} aria-pressed={index === activeIndex}><img src={asset(record.thumbnail)} alt="" /><span>{record.date.slice(11, 16)}</span></button>)}</section>
+        <section className="fact-band" aria-label="Dataset summary"><article><span>Frames</span><strong>{manifest.records}</strong><p>NASA observations with SHA-256 source hashes</p></article><article><span>Median cadence</span><strong>{metrics.cadence.toFixed(2)} h</strong><p>actual timestamp separation</p></article><article><span>Longitude swept</span><strong>{metrics.longitude.toFixed(1)}°</strong><p>unwrapped EPIC centroid metadata</p></article><article><span>Linear period</span><strong>{metrics.period.toFixed(2)} h</strong><p>from longitude versus UTC regression</p></article></section>
+        <section id="analysis" className="analysis-layout"><ObservationChart records={manifest.observations} /><aside className="reading-note"><span>READING NOTE</span><h2>Clouds are the signal and the contaminant.</h2><p>The natural-colour frames reveal genuine evolving morphology. Their JPEG colours have been display-adjusted by NASA, so this graph is a pipeline audit—not calibrated photometry.</p><p>The publishable extension repeats disk integration on EPIC Level-1B radiances and injects HWO window functions into those measured time series.</p></aside></section>
+        <section className="counterfactual-section"><header><span>COUNTERFACTUAL BENCHMARK</span><h2>Now damage the observation.</h2><p>The reduced model is retained as a controlled falsification layer, visually and methodologically separated from the archive data.</p></header><div className="scenario-ledger">{counterfactuals.map(({ name, scenario, result }, index) => <article key={name}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{name}</h3><p>{scenario.baselineDays} d · {scenario.cadenceHours} h cadence · {Math.round(scenario.cloudFraction * 100)}% cloud</p></div><strong className={result.verdict.replaceAll(" ", "-")}>{result.verdict}</strong><dl><div><dt>Recovered</dt><dd>{result.recoveredPeriodHours.toFixed(2)} h</dd></div><div><dt>Error</dt><dd>{(result.periodErrorFraction * 100).toFixed(1)}%</dd></div><div><dt>Alias</dt><dd>{result.aliasRatio.toFixed(2)}×</dd></div></dl></article>)}</div></section>
+        <section id="provenance" className="provenance-section"><header><span>DATA LINEAGE</span><h2>Every pixel has a route home.</h2></header><ol><li><b>01</b><div><strong>NASA EPIC API</strong><p>{manifest.apiUrl}</p></div></li><li><b>02</b><div><strong>Source JPEG + SHA-256</strong><p>Original bytes hashed before local derivation.</p></div></li><li><b>03</b><div><strong>Disk mask + preview RGB</strong><p>Deterministic builder in <code>scripts/build_epic_day.py</code>.</p></div></li><li><b>04</b><div><strong>Science upgrade path</strong><p><a href={manifest.level1bArchive}>EPIC Level-1B radiance archive ↗</a></p></div></li></ol><div className="warning-box"><strong>Validity boundary</strong><p>{manifest.scientificWarning} NASA imagery credit: {manifest.credit}. No biosignature, ocean, vegetation, or habitability claim is made from this bundle.</p></div></section>
+      </>}
     </main>
-    <footer><span>Open methods · deterministic seeds · exportable evidence</span><span>Built for falsifiable observing strategy</span></footer>
+    <footer><span>DATASET BUILD: {manifest ? new Date(manifest.generatedAt).toISOString().slice(0, 10) : "—"}</span><span>OPEN METHODS · CHECKSUMMED INPUTS · FALSIFIABLE OUTPUTS</span></footer>
   </>;
 }

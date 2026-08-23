@@ -12,6 +12,8 @@ Build a cadence/cloud injection–recovery benchmark rather than another spectra
 4. Gu et al. find cloud components dominate much of the disk-integrated variance while finer land subtypes are extremely weak: https://arxiv.org/abs/2012.10556
 5. Mettler et al. show that one rotation very poorly constrains the surface of a partially cloudy planet: https://academic.oup.com/mnras/article/511/1/440/6501216
 6. Lustig-Yaeger et al. show multi-phase mapping can distinguish ocean glint from clouds under favorable assumptions: https://arxiv.org/abs/1901.05011
+7. NASA's EPIC API exposes observation metadata and archive paths for natural-colour image products: https://epic.gsfc.nasa.gov/api
+8. NASA documents that EPIC natural-colour imagery is processed for display and identifies the calibrated Level-1B archive: https://epic.gsfc.nasa.gov/about/epic
 
 ## Claim ledger
 
@@ -22,7 +24,9 @@ Build a cadence/cloud injection–recovery benchmark rather than another spectra
 | phase diversity is important for glint | Lustig-Yaeger et al. | medium-high | include phase/glint leverage but label reduced physics |
 | a community Earth-data gap exists for HWO planning | NASA ExoPAG | high | position as precursor benchmark |
 | no exact open browser benchmark was found | targeted GitHub/software search | medium | claim a narrow workflow contribution, not absolute novelty |
+| bundled frames are genuine NASA archive products | NASA EPIC API, original image URLs, SHA-256 receipts | high | test source domains, hashes, ordering, and record count in CI |
+| natural-image RGB is not calibrated radiance | NASA EPIC instrument documentation | high | label every preview diagnostic and link Level-1B upgrade path |
 
 ## Competing-tool boundary
 
-VPL Earth models, starry, skyscapes, POSEIDON, and published sparse-mapping algorithms address richer forward or inverse problems. This project does not duplicate them. It supplies a transparent pre-retrieval identifiability check.
+VPL Earth models, starry, skyscapes, POSEIDON, and published sparse-mapping algorithms address richer forward or inverse problems. This project does not duplicate them. It supplies a transparent pre-retrieval identifiability check anchored to a reproducible real EPIC sequence. The real-data archive and reduced counterfactual model remain visually, semantically, and computationally separate.
