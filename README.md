@@ -6,6 +6,8 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-55d6d2.svg)](LICENSE)
 [![Research scope](https://img.shields.io/badge/scope-observing_strategy-ff7849.svg)](docs/METHODS.md)
 
+**[Launch the interactive benchmark →](https://biswajit1999.github.io/exoearth-cadence-benchmark/)**
+
 ## The research gap
 
 NASA's Exoplanet Analysis Group has identified a shortage of whole-disk Earth observations at HWO-relevant visible wavelengths, phases below quadrature, and baselines long enough to capture weather across multiple rotations. Meanwhile, published inversions show that clouds dominate much of Earth's disk-integrated variability and that one rotation poorly constrains a surface map.
