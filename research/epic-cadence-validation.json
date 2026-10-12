@@ -1,0 +1,69 @@
+{
+  "data_kind": "real NASA DSCOVR/EPIC display-adjusted natural-colour previews",
+  "date": "2024-01-01",
+  "cadence_and_longitude_coverage": {
+    "observations": 13,
+    "baseline_hours": 21.607777777777777,
+    "median_gap_minutes": 108.03333333333336,
+    "maximum_gap_minutes": 108.05,
+    "gap_mad_seconds": 3.197442310920451e-12,
+    "maximum_unobserved_longitude_arc_deg": 36.328125
+  },
+  "sparse_cadence_interpolation": [
+    {
+      "stride": 2,
+      "retained": 7,
+      "omitted": 6,
+      "effective_gap_hours": 3.601111111111112,
+      "rgb_rmse": 0.004572741915282381,
+      "maximum_absolute_rgb_error": 0.007663565761665991
+    },
+    {
+      "stride": 3,
+      "retained": 5,
+      "omitted": 8,
+      "effective_gap_hours": 5.401666666666667,
+      "rgb_rmse": 0.004331080422227859,
+      "maximum_absolute_rgb_error": 0.008903778063454493
+    },
+    {
+      "stride": 4,
+      "retained": 4,
+      "omitted": 9,
+      "effective_gap_hours": 7.202222222222224,
+      "rgb_rmse": 0.005358807819768078,
+      "maximum_absolute_rgb_error": 0.010024640447358235
+    }
+  ],
+  "display_rgb_covariance": {
+    "channel_standard_deviation": [
+      0.006933572470336645,
+      0.005117816097135817,
+      0.0053540661417521155
+    ],
+    "correlation_matrix": [
+      [
+        1.0,
+        0.8556462470017694,
+        0.15716169608039526
+      ],
+      [
+        0.8556462470017694,
+        1.0,
+        0.6372583773526624
+      ],
+      [
+        0.1571616960803953,
+        0.6372583773526624,
+        1.0
+      ]
+    ],
+    "covariance_eigenvalues": [
+      7.439242231006154e-05,
+      2.83954804273312e-05,
+      1.445903183763336e-07
+    ],
+    "leading_variance_fraction": 0.7227302098838269
+  },
+  "claim_boundary": "Preview RGB values are not calibrated radiances and cannot support biosignature, ocean, vegetation, glint, or exoplanet-detectability claims."
+}
