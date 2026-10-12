@@ -65,6 +65,11 @@ python scripts/build_epic_day.py --date 2024-01-01 --output public/data
 
 The builder downloads original imagery only long enough to hash and reduce it; the repository stores compact WebP derivatives and the complete provenance manifest.
 
+Run `python scripts/analyze_epic_cadence.py` for timestamp/longitude coverage,
+sparse-cadence interpolation loss, and preview-RGB covariance diagnostics. The
+non-radiometric boundary is documented in
+[`docs/EPIC_CADENCE_VALIDATION.md`](docs/EPIC_CADENCE_VALIDATION.md).
+
 ## Reproduce and verify
 
 ```bash
