@@ -1,0 +1,7 @@
+# EPIC preview-cadence sensitivity audit (27 October 2026)
+
+The pinned 13-observation NASA DSCOVR/EPIC day is a **display-adjusted JPEG preview** and is not calibrated reflected-light photometry. This work does not estimate exoplanet detection performance, surface geography, vegetation, or cloud physics.
+
+Three independent numerical diagnostics extend `research/epic_cadence.py` without modifying it: (1) evaluate *all* retained-sample phases for each thinning stride, rather than only phase zero; (2) evaluate linear interpolation only where a withheld epoch is bracketed by two retained epochs, explicitly counting boundary exclusions and reporting the actual bracket duration; and (3) measure leave-one-epoch-out sensitivity of the leading RGB covariance eigenvalue fraction. The third quantity is a deletion range, **not** a confidence interval: epochs are correlated and the sample is only 13.
+
+From the repository root with NumPy installed, run `python scripts/run_epic_robustness.py` and `pytest -q tests/test_epic_robustness.py`. The script consumes the existing pinned `public/data/epic-2024-01-01.json` and writes `research/epic-robustness-2026-10-27.json`. Values are only preview diagnostics. Edge exclusions make errors from different thinning phases non-identically sampled, so comparisons are sensitivity checks rather than performance rankings. For physical photometry, use calibrated Level-1B data and a documented uncertainty model.
