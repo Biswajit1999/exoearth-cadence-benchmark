@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "project": "ExoEarth Cadence Benchmark",
+  "repository": "https://github.com/Biswajit1999/exoearth-cadence-benchmark",
+  "files": [
+    {
+      "label": "Epic cadence validation",
+      "path": "research/epic-cadence-validation.json",
+      "role": "Data and provenance",
+      "bytes": 1884,
+      "sha256": "0741e93fb26824af222ed0167a01131c114b6560e96833315d7f0f48a3039d2e",
+      "hash_basis": "LF-normalised text",
+      "format": "JSON",
+      "keys": [
+        "data_kind",
+        "date",
+        "cadence_and_longitude_coverage",
+        "sparse_cadence_interpolation",
+        "display_rgb_covariance",
+        "claim_boundary"
+      ],
+      "arrays": {
+        "sparse_cadence_interpolation": 3
+      }
+    },
+    {
+      "label": "Epic thinning recovery",
+      "path": "research/epic-thinning-recovery.csv",
+      "role": "Data and provenance",
+      "bytes": 278,
+      "sha256": "5120d65509f3e0809469b47f7d75a7c3f5c128f1f66dc91e199b5812f75e3ba6",
+      "hash_basis": "LF-normalised text",
+      "format": "CSV",
+      "rows": 3,
+      "columns": 6,
+      "headers": [
+        "stride",
+        "retained",
+        "omitted",
+        "effective_gap_hours",
+        "rgb_rmse",
+        "maximum_absolute_rgb_error"
+      ],
+      "preview": [
+        [
+          "2",
+          "7",
+          "6",
+          "3.601111111111112",
+          "0.004572741915282381",
+          "0.007663565761665991"
+        ],
+        [
+          "3",
+          "5",
+          "8",
+          "5.401666666666667",
+          "0.004331080422227859",
+          "0.008903778063454493"
+        ],
+        [
+          "4",
+          "4",
+          "9",
+          "7.202222222222224",
+          "0.005358807819768078",
+          "0.010024640447358235"
+        ]
+      ]
+    },
+    {
+      "label": "Report source",
+      "path": "research/report-source.md",
+      "role": "Data and provenance",
+      "bytes": 2969,
+      "sha256": "1abc32545b28a9ba8608e5d0b8547013503d6c6c500b92762bd9d459d316bbd4",
+      "hash_basis": "LF-normalised text",
+      "format": "MD"
+    },
+    {
+      "label": "Epic 2024 01 01",
+      "path": "public/data/epic-2024-01-01.json",
+      "role": "Data and provenance",
+      "bytes": 8191,
+      "sha256": "4824c40dbe7569ec2741a1361d155b5c9ba53df37c39bdd9f9f460ddc00b00f4",
+      "hash_basis": "LF-normalised text",
+      "format": "JSON",
+      "keys": [
+        "dataset",
+        "date",
+        "records",
+        "generatedAt",
+        "apiUrl",
+        "level1bArchive",
+        "credit"
+      ],
+      "arrays": {
+        "observations": 13
+      }
+    },
+    {
+      "label": "Epic cadence validation",
+      "path": "research/epic-cadence-validation.png",
+      "role": "Figures",
+      "bytes": 137481,
+      "sha256": "ddfc806977e4bcdf379a4251619f3dee02cd833245efe47ab0c070238bd47b93",
+      "hash_basis": "exact bytes",
+      "format": "PNG"
+    }
+  ]
+}

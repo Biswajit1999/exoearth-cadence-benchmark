@@ -1,0 +1,31 @@
+{
+  "project": "ExoEarth Cadence Benchmark",
+  "repository": "https://github.com/Biswajit1999/exoearth-cadence-benchmark",
+  "files": [
+    {
+      "label": "Epic cadence validation",
+      "path": "research/epic-cadence-validation.json",
+      "role": "Data and provenance"
+    },
+    {
+      "label": "Epic thinning recovery",
+      "path": "research/epic-thinning-recovery.csv",
+      "role": "Data and provenance"
+    },
+    {
+      "label": "Report source",
+      "path": "research/report-source.md",
+      "role": "Data and provenance"
+    },
+    {
+      "label": "Epic 2024 01 01",
+      "path": "public/data/epic-2024-01-01.json",
+      "role": "Data and provenance"
+    },
+    {
+      "label": "Epic cadence validation",
+      "path": "research/epic-cadence-validation.png",
+      "role": "Figures"
+    }
+  ]
+}
