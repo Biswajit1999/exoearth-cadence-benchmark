@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { PRESETS, simulate } from "./science";
+import cadenceValidation from "../research/epic-cadence-validation.json";
+import cadenceFigure from "../research/epic-cadence-validation.png";
+import thinningCsv from "../research/epic-thinning-recovery.csv?url";
 
 type EpicObservation = {
   identifier: string; date: string; centroidLatitude: number; centroidLongitude: number;
@@ -15,6 +18,30 @@ const WIDTH = 900;
 const HEIGHT = 260;
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const utcHours = (date: string) => Date.parse(`${date.replace(" ", "T")}Z`) / 3_600_000;
+
+function CadenceEvidence() {
+  const coverage = cadenceValidation.cadence_and_longitude_coverage;
+  return (
+    <section className="cadence-evidence" id="cadence-evidence" aria-labelledby="cadence-title">
+      <h2 id="cadence-title">How much changes when frames are omitted?</h2>
+      <p>The {coverage.observations} EPIC frames span {coverage.baseline_hours.toFixed(2)} hours. The largest unobserved arc in the sampled centroid longitudes is {coverage.maximum_unobserved_longitude_arc_deg.toFixed(1)}°.</p>
+      <figure>
+        <img src={cadenceFigure} width={1980} height={810} loading="lazy" alt="EPIC cadence and error in predicting held-out preview RGB values from thinning the sequence" />
+        <figcaption>For each thinning stride, linear interpolation predicts omitted RGB preview values. The errors describe this one display-rendered sequence and use normalised RGB units.</figcaption>
+      </figure>
+      <div className="cadence-table">
+        <table>
+          <thead><tr><th scope="col">Keep every</th><th scope="col">Frames kept</th><th scope="col">Held-out frames</th><th scope="col">Gap (h)</th><th scope="col">RGB RMSE</th></tr></thead>
+          <tbody>{cadenceValidation.sparse_cadence_interpolation.map(row => <tr key={row.stride}>
+            <th scope="row">{row.stride} frames</th><td>{row.retained}</td><td>{row.omitted}</td>
+            <td>{row.effective_gap_hours.toFixed(2)}</td><td>{row.rgb_rmse.toFixed(4)}</td>
+          </tr>)}</tbody>
+        </table>
+      </div>
+      <p><a href={thinningCsv} download="epic-thinning-recovery.csv">Download the thinning results</a> · <a href="https://github.com/Biswajit1999/exoearth-cadence-benchmark/blob/main/docs/EPIC_CADENCE_VALIDATION.md">Read the method</a></p>
+    </section>
+  );
+}
 
 function unwrap(longitudes: number[]): number[] {
   const output = [longitudes[0]];
@@ -102,6 +129,7 @@ export function App() {
         <section id="analysis" className="analysis-layout"><ObservationChart records={manifest.observations} /><aside className="reading-note"><span>READING NOTE</span><h2>Clouds are the signal and the contaminant.</h2><p>The natural-colour frames reveal genuine evolving morphology. Their JPEG colours have been display-adjusted by NASA, so this graph is a pipeline audit—not calibrated photometry.</p><p>The publishable extension repeats disk integration on EPIC Level-1B radiances and injects HWO window functions into those measured time series.</p></aside></section>
         <section className="counterfactual-section"><header><span>COUNTERFACTUAL BENCHMARK</span><h2>Now damage the observation.</h2><p>The reduced model is retained as a controlled falsification layer, visually and methodologically separated from the archive data.</p></header><div className="scenario-ledger">{counterfactuals.map(({ name, scenario, result }, index) => <article key={name}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{name}</h3><p>{scenario.baselineDays} d · {scenario.cadenceHours} h cadence · {Math.round(scenario.cloudFraction * 100)}% cloud</p></div><strong className={result.verdict.replaceAll(" ", "-")}>{result.verdict}</strong><dl><div><dt>Recovered</dt><dd>{result.recoveredPeriodHours.toFixed(2)} h</dd></div><div><dt>Error</dt><dd>{(result.periodErrorFraction * 100).toFixed(1)}%</dd></div><div><dt>Alias</dt><dd>{result.aliasRatio.toFixed(2)}×</dd></div></dl></article>)}</div></section>
         <section id="provenance" className="provenance-section"><header><span>DATA LINEAGE</span><h2>Every pixel has a route home.</h2></header><ol><li><b>01</b><div><strong>NASA EPIC API</strong><p>{manifest.apiUrl}</p></div></li><li><b>02</b><div><strong>Source JPEG + SHA-256</strong><p>Original bytes hashed before local derivation.</p></div></li><li><b>03</b><div><strong>Disk mask + preview RGB</strong><p>Deterministic builder in <code>scripts/build_epic_day.py</code>.</p></div></li><li><b>04</b><div><strong>Science upgrade path</strong><p><a href={manifest.level1bArchive}>EPIC Level-1B radiance archive ↗</a></p></div></li></ol><div className="warning-box"><strong>Validity boundary</strong><p>{manifest.scientificWarning} NASA imagery credit: {manifest.credit}. No biosignature, ocean, vegetation, or habitability claim is made from this bundle.</p></div></section>
+        <CadenceEvidence />
       </>}
     </main>
     <footer><span>DATASET BUILD: {manifest ? new Date(manifest.generatedAt).toISOString().slice(0, 10) : "—"}</span><span>OPEN METHODS · CHECKSUMMED INPUTS · FALSIFIABLE OUTPUTS</span></footer>

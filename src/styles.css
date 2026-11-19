@@ -4,3 +4,10 @@ html,body{overflow-x:clip}
 @media(max-width:900px){.mission-header nav a:not(:last-child){display:none}.editorial-hero{grid-template-columns:1fr;background:none}.editorial-hero h1{align-self:end}.hero-deck{width:100%;justify-self:start;margin-top:3rem}.archive-stage,.analysis-layout{grid-template-columns:1fr}.archive-stage{min-height:auto}.earth-stage{min-height:520px}.frame-record,.observation-chart{border-left:0;border-right:0;border-top:1px solid #394247}.fact-band{grid-template-columns:1fr 1fr}.fact-band article:nth-child(2){border-right:0}.fact-band article:nth-child(-n+2){border-bottom:1px solid var(--ink)}.scenario-ledger article{grid-template-columns:40px 1fr auto;padding:1.3rem 0}.scenario-ledger article dl{grid-column:2/-1}.warning-box{grid-template-columns:1fr}}
 @media(max-width:560px){.mission-header{padding:0 1rem}.editorial-hero{min-height:560px;padding-top:3rem}.editorial-hero h1{font-size:5.1rem}.hero-deck p{font-size:1rem}.earth-stage{min-height:390px}.earth-stage img{width:95%}.frame-record{padding:2rem}.frame-record h2{font-size:4.5rem}.fact-band article{padding:1.1rem}.fact-band strong{font-size:2rem}.observation-chart figcaption{display:block}.observation-chart figcaption p{max-width:none}.scenario-ledger article{grid-template-columns:30px 1fr}.scenario-ledger article>strong{grid-column:2}.scenario-ledger article dl{grid-column:2;grid-template-columns:1fr 1fr}.provenance-section li{grid-template-columns:40px 1fr}.warning-box{padding:1rem}footer{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+.cadence-evidence { width: min(1050px, 100% - 2rem); margin: clamp(2rem, 6vw, 4rem) auto; }
+.cadence-evidence figure { margin: 1rem 0; }
+.cadence-evidence img { display: block; width: 100%; height: auto; }
+.cadence-evidence figcaption { max-width: 74ch; margin-top: .7rem; line-height: 1.6; }
+.cadence-evidence a { color: inherit; text-decoration: underline; }
+.cadence-table { overflow-x: auto; }
+.cadence-table table { width: 100%; min-width: 485px; }
