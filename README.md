@@ -170,3 +170,18 @@ Issues that include a failing seed, schedule, expected physical behavior, and a 
 ## License
 
 MIT. Scientific references and external datasets retain their own licenses and citation requirements.
+
+## Research evidence and downloads
+
+- [Download the machine-readable table profiles](evidence/table-profiles.json) for 1 archived tables. Open `table-evidence.html` from the checkout for the coverage chart.
+- Start with [Epic cadence validation](research/epic-cadence-validation.json), [Epic thinning recovery](research/epic-thinning-recovery.csv), [Report source](research/report-source.md).
+- [View Epic cadence validation](research/epic-cadence-validation.png).
+
+Run these commands from the repository root to rebuild the published evidence.
+
+```sh
+python scripts/evidence_catalog.py
+python scripts/render_evidence_page.py
+python scripts/profile_evidence_tables.py
+python scripts/render_table_profiles.py
+```
