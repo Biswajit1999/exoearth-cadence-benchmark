@@ -70,6 +70,10 @@ sparse-cadence interpolation loss, and preview-RGB covariance diagnostics. The
 non-radiometric boundary is documented in
 [`docs/EPIC_CADENCE_VALIDATION.md`](docs/EPIC_CADENCE_VALIDATION.md).
 
+![Cadence and held-out interpolation losses for the 13-frame NASA EPIC sequence](research/epic-cadence-validation.png)
+
+[Open the cadence validation and download its table](https://biswajit1999.github.io/exoearth-cadence-benchmark/#cadence-evidence). The three thinning schedules retain 7, 5, and 4 frames. Their errors refer to held-out preview RGB values from the display-processed sequence.
+
 ## Reproduce and verify
 
 ```bash
