@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "project": "ExoEarth Cadence Benchmark",
+  "tables": [
+    {
+      "path": "research/epic-thinning-recovery.csv",
+      "label": "Epic thinning recovery",
+      "role": "Data and provenance",
+      "rows": 3,
+      "width_mismatches": 0,
+      "columns": [
+        {
+          "name": "stride",
+          "blank": 0,
+          "text": 0,
+          "finite": 3,
+          "nonfinite": 0,
+          "minimum": 2.0,
+          "maximum": 4.0
+        },
+        {
+          "name": "retained",
+          "blank": 0,
+          "text": 0,
+          "finite": 3,
+          "nonfinite": 0,
+          "minimum": 4.0,
+          "maximum": 7.0
+        },
+        {
+          "name": "omitted",
+          "blank": 0,
+          "text": 0,
+          "finite": 3,
+          "nonfinite": 0,
+          "minimum": 6.0,
+          "maximum": 9.0
+        },
+        {
+          "name": "effective_gap_hours",
+          "blank": 0,
+          "text": 0,
+          "finite": 3,
+          "nonfinite": 0,
+          "minimum": 3.601111111111112,
+          "maximum": 7.202222222222224
+        },
+        {
+          "name": "rgb_rmse",
+          "blank": 0,
+          "text": 0,
+          "finite": 3,
+          "nonfinite": 0,
+          "minimum": 0.004331080422227859,
+          "maximum": 0.005358807819768078
+        },
+        {
+          "name": "maximum_absolute_rgb_error",
+          "blank": 0,
+          "text": 0,
+          "finite": 3,
+          "nonfinite": 0,
+          "minimum": 0.007663565761665991,
+          "maximum": 0.010024640447358235
+        }
+      ]
+    }
+  ],
+  "excluded": []
+}
